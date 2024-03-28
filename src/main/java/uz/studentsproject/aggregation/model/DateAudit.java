@@ -8,6 +8,7 @@ import org.hibernate.annotations.CurrentTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -19,6 +20,8 @@ import java.time.Instant;
 )
 public abstract class DateAudit implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1304159079955693502L;
     @CreatedDate
     @Column(updatable = false)
     @CurrentTimestamp

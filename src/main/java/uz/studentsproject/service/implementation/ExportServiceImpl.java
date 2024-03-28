@@ -1,10 +1,12 @@
 package uz.studentsproject.service.implementation;
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -124,7 +126,6 @@ public class ExportServiceImpl implements ExportService {
 
 
     @Override
-
     public List<StudentResponseDto> getAllStudents(Pageable pageable) {
         try {
             String sql = ("""
@@ -185,9 +186,10 @@ public class ExportServiceImpl implements ExportService {
             contentStream.endText();
 
             // Load student's photo
-            PDImageXObject photo = PDImageXObject.createFromFile(this.uploadFolder + "\\" + fileStorage.getUploadPath(), document);
+            PDImageXObject photo = PDImageXObject.createFromFile(this.uploadFolder + "\\" +
+                    fileStorage.getUploadPath(), document);
             // Draw student's photo on the PDF
-            contentStream.drawImage(photo, 50, 500, 100, 100); // Adjust the position and size as needed
+            contentStream.drawImage(photo, 420, 700, 100, 120); // Adjust the position and size as needed
 
             contentStream.close();
 
@@ -201,6 +203,91 @@ public class ExportServiceImpl implements ExportService {
             return null;
         }
     }
+
+    @Override
+    public byte[] pdfResume2(Long id, HttpServletResponse httpServletResponse) throws IOException, DocumentException {
+
+        StudentResponseDto studentInfo = getStudentInfo(id);
+        assert studentInfo != null;
+        FileStorage fileStorage = fileStorageRepository.findById(studentInfo.getFileStorageId()).orElseThrow();
+        String path = "C:\\Users\\asadb\\Desktop\\Projects\\Projects\\StudentsProject\\" + this.uploadFolder + "\\"
+                + fileStorage.getUploadPath();
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Document document = new Document();
+
+            PdfWriter.getInstance(document, outputStream);
+            document.open();
+
+            Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            font.setSize(10);
+            font.setColor(BaseColor.RED);
+
+            Paragraph paragraph = new Paragraph(studentInfo.getFirstName() + " " + studentInfo.getLastName() + " Resume", font);
+            paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+
+            Image image = Image.getInstance(path);
+            image.scaleToFit(100f, 100f);
+            image.scaleAbsolute(200f, 200f);
+            PdfPTable pdfPTable = new PdfPTable(3);
+            image.setAlignment(Image.ALIGN_RIGHT);
+            pdfPTable.getDefaultCell().setBorder(0);
+            pdfPTable.addCell("");
+            pdfPTable.addCell("");
+            pdfPTable.addCell(image);
+
+            document.add(pdfPTable);
+            document.add(paragraph);
+
+            PdfPTable table = new PdfPTable(9);
+            table.setSpacingAfter(25);
+            table.setSpacingBefore(25);
+
+            PdfPCell[] headers = new PdfPCell[]{
+                    new PdfPCell(new Phrase("First Name", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("Last Name", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("Middle Name", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("University", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("Field of Study", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("Description", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("Study Start Date", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("Study End Date", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase("Gender", FontFactory.getFont(FontFactory.HELVETICA, 8))),
+
+            };
+
+            PdfPCell[] data = new PdfPCell[]{
+                    new PdfPCell(new Phrase(studentInfo.getFirstName(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getLastName(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getMiddleName(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getUniversityName(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getFieldOfStudyName(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getDescription(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getStudyStateDate().toString(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getStudyEndDate().toString(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+                    new PdfPCell(new Phrase(studentInfo.getGender(), FontFactory.getFont(FontFactory.HELVETICA, 8))),
+            };
+
+            for (PdfPCell cell : headers) {
+                cell.setBackgroundColor(BaseColor.GRAY);
+                table.addCell(cell);
+            }
+
+            for (PdfPCell cell : data) {
+                table.addCell(cell);
+            }
+
+            document.add(table);
+            document.close();
+
+            return outputStream.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception here, you may log it or return an error response
+            return null;
+        }
+    }
+
 
 
     public void rowGenerator(String[] headers, Sheet sheet, Workbook workbook) {

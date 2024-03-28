@@ -75,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
                         JOIN field_of_study fos ON s.field_of_study_id = fos.id
                         JOIN university u ON fos.university_id = u.id
                         JOIN file_storage fs ON s.file_storage_id = fs.id\s
-                    ORDER BY s.id
+                    ORDER BY s.id  
                     OFFSET :offset
                     LIMIT :limit
                                 """);

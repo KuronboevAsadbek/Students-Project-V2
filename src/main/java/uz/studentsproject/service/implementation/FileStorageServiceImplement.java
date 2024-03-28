@@ -41,7 +41,9 @@ public class FileStorageServiceImplement implements FileStorageService {
     @Value("${upload.folder}")
     private String uploadFolder;
 
-    public static ResponseEntity<FileUrlResource> getFileUrlResourceResponseEntity(@RequestParam(value = "hashId", required = false) String hashId, @RequestParam(value = "fileId", required = false) Long fileId, FileStorageService fileStorageService, String uploadFolder) throws MalformedURLException {
+    public static ResponseEntity<FileUrlResource> getFileUrlResourceResponseEntity(@RequestParam(
+            value = "hashId", required = false) String hashId, @RequestParam(value = "fileId", required = false)
+    Long fileId, FileStorageService fileStorageService, String uploadFolder) throws MalformedURLException {
         if (hashId == null && fileId == null) {
             return ResponseEntity.badRequest().build();
         }

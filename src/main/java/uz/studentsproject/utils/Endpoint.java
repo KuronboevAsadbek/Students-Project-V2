@@ -35,5 +35,7 @@ public class Endpoint {
 
     public static final String PDF_RESUME = "/pdfresume/{id}";
 
+    public static final String PDF_RESUME2= "/pdfresume2/{id}";
+
 
 }
