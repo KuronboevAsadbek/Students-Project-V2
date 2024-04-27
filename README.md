@@ -23,8 +23,8 @@ public class StudentsProjectApplication {
 ```
 | No |                                                                             Services                                                                              | Status |
 |:--:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------:|
-| 1  |    [University Service](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/StudentController.java)     |   ✅    |
-| 2  | [Field Of Study Service](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/UniversityController.java) |   ✅    |
-| 3  |   [Student Service](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/FieldOfStudyController.java)    |   ✅    |
+| 1  |    [University Service](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/UniversityController.java)     |   ✅    |
+| 2  | [Field Of Study Service](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/FieldOfStudyController.java) |   ✅    |
+| 3  |   [Student Service](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/StudentController.java)         |   ✅    |
 | 4  | [File Storage Service](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/FileStorageController.java)  |   ✅    |
 | 5  |      [Export Services](https://github.com/KuronboevAsadbek/Students-Project-V2/blob/main/src/main/java/uz/studentsproject/controller/ExportController.java)       |   ✅    |
